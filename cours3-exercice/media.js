@@ -31,6 +31,15 @@ const traiterMedia = (data, type) => {
   media.remplir();
 };
 
+const traiterImages = images => {
+  const divImages = Helpers.id("media-images");
+  images.map(image => {
+    const img = document.createElement("img");
+    img.src = Helpers.imageUrl(image.file_path);
+    divImages.appendChild(img);
+  });
+};
+
 const chargerMedia = (type, id) => {
   const url = `https://api.themoviedb.org/3/${type}/${id}?api_key=${apiKey}&language=fr-FR`;
   axios
@@ -43,6 +52,12 @@ const chargerMedia = (type, id) => {
         console.error(error);
       }
     });
+
+  const imagesUrl = `https://api.themoviedb.org/3/${type}/${id}/images?api_key=${apiKey}`;
+  axios
+    .get(imagesUrl)
+    .then(response => traiterImages(response.data.backdrops))
+    .catch(error => console.error(error));
 };
 
 export default chargerMedia;
